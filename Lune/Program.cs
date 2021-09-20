@@ -16,13 +16,13 @@ namespace Lune
 
         static double AgeLune(int jour, int mois, int annee)
         {
-            double DATE_JULIENNE_NOUVELLE_LUNE = JourJulien(6, 1, 2000); // Première nouvelle lune de l'an 2000
             const double PERIODE_LUNAIRE = 29.53;
-            double jd = JourJulien(jour, mois, annee);
-            double jourDepuisNouvelleLune = jd - DATE_JULIENNE_NOUVELLE_LUNE;
+            int jourDepuisNouvelleLune = JourJulien(jour, mois, annee) - JourJulien(13, 1, 2021); // Nouvelle lune connue
             double nbNouvellesLunes = jourDepuisNouvelleLune / PERIODE_LUNAIRE;
-            double reste = nbNouvellesLunes % 1;
-            return reste * PERIODE_LUNAIRE;
+            double reste = nbNouvellesLunes % 1 * PERIODE_LUNAIRE;
+            if (reste < 0)
+                reste += PERIODE_LUNAIRE;
+            return reste;
         }
 
         static void Main(string[] args)
@@ -36,6 +36,11 @@ namespace Lune
             Console.WriteLine(AgeLune(1, 3, 2017));
             Console.WriteLine(AgeLune(20, 9, 2021));
             Console.WriteLine(JourJulien(19, 9, 2021));
+            Console.WriteLine(AgeLune(6, 1, 2000));
+            Console.WriteLine(AgeLune(5, 2, 2000));
+            Console.WriteLine(AgeLune(4, 2, 2000));
+            Console.WriteLine(AgeLune(3, 2, 2000));
+            Console.WriteLine(AgeLune(2, 13, 2040));
         }
            
     }

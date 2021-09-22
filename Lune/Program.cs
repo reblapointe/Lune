@@ -47,7 +47,7 @@ namespace Lune
 
         static double AgeLune(int jour, int mois, int annee)
         {
-            int dateNouvelleLuneConnue = JourJulien(13, 1, 2021); // Nouvelle lune connue
+            int dateNouvelleLuneConnue = JourJulien(13, 1, 2021);
             int joursDepuis = JourJulien(jour, mois, annee) - dateNouvelleLuneConnue;
             double nbNouvellesLunesDepuis = joursDepuis / PERIODE_LUNAIRE;
             double age = nbNouvellesLunesDepuis % 1 * PERIODE_LUNAIRE;
@@ -110,7 +110,7 @@ namespace Lune
             string phase;
             double luminosite = Luminosite(ageLune);
 
-            if (luminosite < 0.03)
+            if (luminosite < 0.04)
                 phase = "Nouvelle lune";
             else if (luminosite < 0.35)
             {
@@ -126,7 +126,7 @@ namespace Lune
                 else
                     phase = "Quartier décroissant";
             }
-            else if (luminosite < 0.97)
+            else if (luminosite < 0.96)
             {
                 if (EstCroissante(ageLune))
                     phase = "Lune gibbeuse croissant";

@@ -2,6 +2,18 @@
 
 namespace Lune
 {
+
+
+    // Nouvelle lune 2% --> 0% --> 2%
+    // Premier croissant 3% --> 34%
+    // Premier quartier 35% --> 65%
+    // Lune gibbeuse croissante --> 66% à 96%
+    // Pleine lune 97% --> 100% --> 97%
+    // Lune gibbeuse décroissante --> 96% à 66%
+    // Dernier quartier 65% --> 35%
+    // Dernier croissant 34% --> 3%
+
+
     class Program
     {
         // REB : Rajouter de la duplication
@@ -35,9 +47,10 @@ namespace Lune
 
         static double AgeLune(int jour, int mois, int annee)
         {
-            int jourDepuisNouvelleLune = JourJulien(jour, mois, annee) - JourJulien(13, 1, 2021); // Nouvelle lune connue
-            double nbNouvellesLunes = jourDepuisNouvelleLune / PERIODE_LUNAIRE;
-            double age = nbNouvellesLunes % 1 * PERIODE_LUNAIRE;
+            int dateNouvelleLuneConnue = JourJulien(13, 1, 2021); // Nouvelle lune connue
+            int joursDepuis = JourJulien(jour, mois, annee) - dateNouvelleLuneConnue;
+            double nbNouvellesLunesDepuis = joursDepuis / PERIODE_LUNAIRE;
+            double age = nbNouvellesLunesDepuis % 1 * PERIODE_LUNAIRE;
             if (age < 0)
                 age += PERIODE_LUNAIRE;
             return age;
@@ -79,7 +92,6 @@ namespace Lune
             return jour >= 1 && jour <= NbJoursDansMois(mois, annee) && mois >= 1 && mois <= 12;
         }
 
-
         static bool EstCroissante(double ageLune)
         {
             return ageLune < PERIODE_LUNAIRE / 2;
@@ -92,16 +104,9 @@ namespace Lune
             else
                 return (PERIODE_LUNAIRE - ageLune) / (PERIODE_LUNAIRE / 2);
         }
+
         static string Phase(double ageLune)
         {
-            // Nouvelle lune 2% --> 0% --> 2%
-            // Premier croissant 3% --> 34%
-            // Premier quartier 35% --> 65%
-            // Lune gibbeuse croissante --> 66% à 96%
-            // Pleine lune 97% --> 100% --> 97%
-            // Lune gibbeuse décroissante --> 96% à 66%
-            // Dernier quartier 65% --> 35%
-            // Dernier croissant 34% --> 3%
             string phase;
             double luminosite = Luminosite(ageLune);
 
@@ -141,12 +146,12 @@ namespace Lune
             int mois = DateTime.Now.Month;
             int annee = DateTime.Now.Year;
 
-            double ageLune = Math.Round(AgeLune(jour, mois, annee), 0);
+            double ageLune = AgeLune(jour, mois, annee);
             string phase = Phase(ageLune);
             double luminosite = Luminosite(ageLune);
             Console.Write($"En date du {jour}/{mois}/{annee}, ");
-            Console.Write($"la lune a {ageLune} jour(s). ");
-            Console.Write($"Elle est dans sa phase {phase}. ({(int)(luminosite * 100)}%)");
+            Console.Write($"la lune a {Math.Round(ageLune)} jour(s). ");
+            Console.Write($"Elle est dans sa phase {phase}. ({Math.Round(luminosite * 100)}%)");
             Console.WriteLine();
 
             bool valide;
@@ -164,12 +169,12 @@ namespace Lune
 
                 if (EstDateValide(jour, mois, annee))
                 {
-                    ageLune = Math.Round(AgeLune(jour, mois, annee), 0);
+                    ageLune = AgeLune(jour, mois, annee);
                     phase = Phase(ageLune);
                     luminosite = Luminosite(ageLune);
                     Console.Write($"En date du {jour}/{mois}/{annee}, ");
-                    Console.Write($"la lune a {ageLune} jour(s). ");
-                    Console.Write($"Elle est dans sa phase {phase}. ({(int)(luminosite * 100)}%)");
+                    Console.Write($"la lune a {Math.Round(ageLune)} jour(s). ");
+                    Console.Write($"Elle est dans sa phase {phase}. ({Math.Round(luminosite * 100)}%)");
                     Console.WriteLine();
                 }
                 else

@@ -281,16 +281,17 @@ else phase = PHASE_PLEINE_LUNE;
             }
             l = Luminosite(ageLune);
             Console.Write($"En date du {jour}/{mois}/{annee}, ");
-            Console.Write($"la lune a {Math.Round(ageLune)} jour(s). ");
+            Console.Write($"la lune a {Math.Round(ageLune)} jour(s).\n");
             Console.Write($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
             DessinerLune(ageLune);
             Console.WriteLine();
 
             bool valide;
-            Console.WriteLine("-------------------------------------------------------------------");
-            Console.WriteLine("Entrez des dates pour voir l'âge de la lune. Pour quitter, entrez Q");
             do
             {
+                Console.WriteLine("-------------------------------------------------------------------");
+                Console.WriteLine("Entrez une date pour voir l'état de la lune. Pour quitter, entrez Q");
+            
                 // Lire les trois nombres
                 Console.WriteLine("Entrez un jour");
                 valide = int.TryParse(Console.ReadLine(), out jour);
@@ -317,7 +318,7 @@ else phase = PHASE_PLEINE_LUNE;
                     }
                     l = Luminosite(ageLune);
                     Console.Write($"En date du {jour}/{mois}/{annee}, ");
-                    Console.Write($"la lune a {Math.Round(ageLune)} jour(s). ");
+                    Console.Write($"la lune a {Math.Round(ageLune)} jour(s).\n");
                     Console.Write($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
                     DessinerLune(ageLune);
                     Console.WriteLine();

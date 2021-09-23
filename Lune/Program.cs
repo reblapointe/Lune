@@ -1,19 +1,8 @@
 ﻿using System;
+using System.Threading;
 
 namespace Lune
 {
-
-
-    // Nouvelle lune 2% --> 0% --> 2%
-    // Premier croissant 3% --> 34%
-    // Premier quartier 35% --> 65%
-    // Lune gibbeuse croissante --> 66% à 96%
-    // Pleine lune 97% --> 100% --> 97%
-    // Lune gibbeuse décroissante --> 96% à 66%
-    // Dernier quartier 65% --> 35%
-    // Dernier croissant 34% --> 3%
-
-
     class Program
     {
         // Réparer l'indentation ctrl e -d
@@ -26,8 +15,13 @@ namespace Lune
         // Déplacer une ligne
         // CTRL-MAJ-V
 
+        // Suivre l'exécution (step over et step into) SEMAINE 7
         // Entourer de intellisense
+
+
         const double PERIODE_LUNAIRE = 29.53;
+
+        // Les phases de la lune
         const int PHASE_NOUVELLE_LUNE = 0;
         const int PHASE_PREMIER_CROISSANT = 1;
         const int PHASE_PREMIER_QUARTIER = 2;
@@ -37,7 +31,13 @@ namespace Lune
         const int PHASE_DERNIER_QUARTIER = 6;
         const int PHASE_DERNIER_CROISSANT = 7;
 
-        // Suivre l'exécution (step over et step into) SEMAINE 7
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jour"></param>
+        /// <param name="mois"></param>
+        /// <param name="annee"></param>
+        /// <returns></returns>
         static int JourJulien(int jour, int mois, int annee)
         {
             // https://en.wikipedia.org/wiki/Julian_day#Converting_Gregorian_calendar_date_to_Julian_Day_Number
@@ -48,6 +48,13 @@ namespace Lune
                 jour - 32075;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jour"></param>
+        /// <param name="mois"></param>
+        /// <param name="annee"></param>
+        /// <returns></returns>
         static double AgeLune(int jour, int mois, int annee)
         {
             int dateNouvelleLuneConnue = JourJulien(13, 1, 2021);
@@ -59,17 +66,30 @@ namespace Lune
             return age;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="annee"></param>
+        /// <returns></returns>
         static bool EstBissextile(int annee)
         {
             return annee % 400 == 0 || annee % 4 == 0 && annee % 100 != 0;
         }
 
-        // Hémisphère nord
+        /// <summary>
+        /// Hémisphère nord
+        /// </summary>
+        /// <param name="ageLune"></param>
         static void DessinerLune(double ageLune)
         {
             DessinerLune(ageLune, true);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ageLune"></param>
+        /// <param name="hemisphereNord"></param>
         static void DessinerLune(double ageLune, bool hemisphereNord)
         {
             const int TAILLE_DESSIN = 20;
@@ -82,11 +102,11 @@ namespace Lune
             Console.Write("(");
             for (int i = 0; i < TAILLE_DESSIN; i++)
             {
-                if (croissant && (TAILLE_DESSIN - i - 1) / (double)TAILLE_DESSIN < luminosite)
+                if (croissant && (TAILLE_DESSIN - i) / (double)TAILLE_DESSIN < luminosite)
                 {
                     Console.Write("█");
                 }
-                else if (!croissant && ((i - 1) / (double)TAILLE_DESSIN < luminosite))
+                else if (!croissant && (i / (double)TAILLE_DESSIN < luminosite))
                 {
                     Console.Write("█");
                 }
@@ -126,16 +146,55 @@ namespace Lune
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jour"></param>
+        /// <param name="mois"></param>
+        /// <param name="annee"></param>
+        /// <returns></returns>
         static bool EstDateValide(int jour, int mois, int annee)
         {
             return jour >= 1 && jour <= NbJoursDansMois(mois, annee) && mois >= 1 && mois <= 12;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ageLune"></param>
+        /// <returns></returns>
         static bool EstCroissante(double ageLune)
         {
             return ageLune < PERIODE_LUNAIRE / 2;
         }
 
+        static void Demain(ref int jour, ref int mois, ref int annee)
+        {
+            if (EstDateValide (jour + 1, mois, annee))
+            {
+                jour++;
+                return;
+            }
+            else if (EstDateValide(1, mois + 1, annee)) 
+            {
+                jour = 1;
+                mois++;
+                return;
+            }
+            else
+            {
+                jour = 1;
+                mois = 1;
+                annee++;
+            }
+            return;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ageLune"></param>
+        /// <returns></returns>
         static double Luminosite(double ageLune)
         {
             if (EstCroissante(ageLune))
@@ -144,6 +203,11 @@ namespace Lune
                 return (PERIODE_LUNAIRE - ageLune) / (PERIODE_LUNAIRE / 2);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ageLune"></param>
+        /// <returns></returns>
         static int Phase(double ageLune)
         {
             int phase;
@@ -186,9 +250,13 @@ namespace Lune
             int mois = DateTime.Now.Month;
             int annee = DateTime.Now.Year;
 
-            double ageLune = AgeLune(jour, mois, annee);
-            int phase = Phase(ageLune);
+            double ageLune;
+            int phase;
             string descriptionPhase;
+            double luminosite;
+
+            ageLune = AgeLune(jour, mois, annee);
+            phase = Phase(ageLune);
             switch(phase)
             {
                 case PHASE_NOUVELLE_LUNE: descriptionPhase = "Nouvelle lune"; break;
@@ -201,7 +269,7 @@ namespace Lune
                 case PHASE_DERNIER_CROISSANT: descriptionPhase = "Dernier croissant"; break;
                 default: descriptionPhase = "Pas une phase"; break;
             }
-            double luminosite = Luminosite(ageLune);
+            luminosite = Luminosite(ageLune);
             Console.Write($"En date du {jour}/{mois}/{annee}, ");
             Console.Write($"la lune a {Math.Round(ageLune)} jour(s). ");
             Console.Write($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(luminosite * 100)}%)");

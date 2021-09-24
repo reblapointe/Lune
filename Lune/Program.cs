@@ -65,7 +65,7 @@ namespace Lune
 
         /// <summary>
         /// Détermine si une année est bissextile. 
-        /// Ce calcul estime que l'année tropique vaut 365.2425 jours
+        /// Ce calcul estime que l'année tropique dure 365.2425 jours
         /// </summary>
         /// <param name="annee">Une année</param>
         /// <returns>Vrai si l'année est bissextile, faux sinon</returns>
@@ -83,6 +83,14 @@ namespace Lune
             DessinerLune(ageLune, true);
         }
 
+        /// <summary>
+        /// Détermine si un point est dans un cercle compris dans le premier cadran du plan
+        /// et tangeant aux deux axes.
+        /// </summary>
+        /// <param name="rangee">Coordonnée en abscisse du point</param>
+        /// <param name="colonne">Coordonnée en ordonnée du point</param>
+        /// <param name="diametre">Diamètre du cercle.</param>
+        /// <returns>Vrai si le point se situe dans le cercle, faux sinon.</returns>
         static bool EstDansCercle(int rangee, int colonne, int diametre)
         {
             double rayon = diametre / 2.0;

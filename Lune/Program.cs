@@ -83,6 +83,14 @@ namespace Lune
             DessinerLune(ageLune, true);
         }
 
+        static bool EstDansCercle(int rangee, int colonne, int diametre)
+        {
+            double rayon = diametre / 2.0;
+            double x = rangee - rayon;
+            double y = colonne - rayon;
+            return x * x + y * y < rayon * rayon;
+        }
+
         /// <summary>
         /// Dessine la lune en fonction de son âge, telle qu'observée dans l'hémisphère demandé.
         /// </summary>
@@ -90,31 +98,48 @@ namespace Lune
         /// <param name="hemisphereNord">Vrai si hémisphère nord, faux si hémishère sud.</param>
         static void DessinerLune(double ageLune, bool hemisphereNord)
         {
-            const int TAILLE_DESSIN = 20;
+            const int TAILLE_DESSIN = 21;
             double luminosite = Luminosite(ageLune);
-            bool croissant = EstCroissante(ageLune);
+            bool droiteEclairee = EstCroissante(ageLune);
             if (!hemisphereNord)
-                croissant = !croissant;
+                droiteEclairee = !droiteEclairee;
 
-            Console.WriteLine();
-            Console.Write("(");
-            for (int i = 0; i < TAILLE_DESSIN; i++)
+            for (int i = 0; i <= TAILLE_DESSIN; i++)
             {
-                if (croissant && (TAILLE_DESSIN - i) / (double)TAILLE_DESSIN < luminosite)
+                int largeur = 0;
+                for (int j = 0; j < TAILLE_DESSIN; j++)
+                    if (EstDansCercle(i, j, TAILLE_DESSIN))
+                        largeur++;
+                
+                for (int j = 0; j <= TAILLE_DESSIN; j++)
                 {
-                    Console.Write("█");
+                    if (EstDansCercle(i, j, TAILLE_DESSIN))
+                    {
+                        double decalage = (TAILLE_DESSIN - largeur) / 2.0;
+                        if (EstIlluminee(j - decalage, largeur, luminosite, droiteEclairee))
+                            Console.Write("██");
+                        else
+                            Console.Write("  ");
+                    }
+                    else
+                        Console.Write("··");
                 }
-                else if (!croissant && (i / (double)TAILLE_DESSIN < luminosite))
-                {
-                    Console.Write("█");
-                }
-                else
-                {
-                    Console.Write(" ");
-                }
+                Console.WriteLine();
             }
-            Console.Write(")");
-            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Détermine si un point sur un dessin de la lune est illuminé.
+        /// </summary>
+        /// <param name="position">Position du point sur le dessin</param>
+        /// <param name="largeur">Largeur du dessin</param>
+        /// <param name="luminosite">Proportion de la lune qui est illuminée</param>
+        /// <param name="droiteEclairee">Vrai si la section droite de la lune est éclairée, faux sinon</param>
+        /// <returns>Vrai si le point est illuminé, faux sinon</returns>
+        static bool EstIlluminee(double position, int largeur, double luminosite, bool droiteEclairee)
+        {
+            return droiteEclairee && (largeur - position) / largeur < luminosite ||
+                !droiteEclairee && (position / largeur < luminosite);
         }
 
 
@@ -280,9 +305,9 @@ else phase = PHASE_PLEINE_LUNE;
                 default: descriptionPhase = "Pas une phase"; break;
             }
             l = Luminosite(ageLune);
-            Console.Write($"En date du {jour}/{mois}/{annee}, ");
-            Console.Write($"la lune a {Math.Round(ageLune)} jour(s).\n");
-            Console.Write($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
+            Console.WriteLine($"En date du {jour}/{mois}/{annee}, à minuit heure locale.");
+            Console.WriteLine($"La lune a {Math.Round(ageLune)} jour(s).");
+            Console.WriteLine($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
             DessinerLune(ageLune);
             Console.WriteLine();
 
@@ -317,9 +342,9 @@ else phase = PHASE_PLEINE_LUNE;
                         default: descriptionPhase = "Pas une phase"; break;
                     }
                     l = Luminosite(ageLune);
-                    Console.Write($"En date du {jour}/{mois}/{annee}, ");
-                    Console.Write($"la lune a {Math.Round(ageLune)} jour(s).\n");
-                    Console.Write($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
+                    Console.WriteLine($"En date du {jour}/{mois}/{annee}, à minuit heure locale.");
+                    Console.WriteLine($"La lune a {Math.Round(ageLune)} jour(s).");
+                    Console.WriteLine($"Elle est dans sa phase {descriptionPhase}. ({Math.Round(l * 100)}%)");
                     DessinerLune(ageLune);
                     Console.WriteLine();
                 }

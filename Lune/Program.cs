@@ -75,7 +75,7 @@ namespace Lune
         }
 
         /// <summary>
-        /// Dessine la lune en fonction de son âge, telle qu'observée dans l'hémisphère nord.
+        /// DESSINE LA LUNE EN FONCTION DE SON ÂGE, TELLE QU'OBSERVÉE DANS L'HÉMISPHÈRE NORD.
         /// </summary>
         /// <param name="ageLune">L'âge de la lune en jours depuis la dernière nouvelle lune</param>
         static void DessinerLune(double ageLune)

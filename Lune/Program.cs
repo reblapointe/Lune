@@ -154,10 +154,10 @@ namespace Lune
         /// <summary>
         /// Retourne le nombre de jours dans un mois donné. Si le mois n'existe pas, la fonction retourne 31.
         /// </summary>
-        /// <param name="mois">Le mois</param>
         /// <param name="annee">L'année </param>
+        /// <param name="mois">Le mois</param>
         /// <returns>Le nombre de jours que contient le mois demandé dans l'année demandée</returns>
-        static int NbJoursDansMois(int mois, int annee)
+        static int NbJoursDansMois(int annee, int mois)
         {
             switch (mois)
             {
@@ -179,7 +179,7 @@ namespace Lune
         static bool EstDateValide(int jour, int mois, int annee)
         {
             if (jour >= 1) 
-                if (jour <= NbJoursDansMois(mois, annee))
+                if (jour <= NbJoursDansMois(annee, mois))
                     if (mois >= 1)
                         if (mois <= 12)
                             return true;

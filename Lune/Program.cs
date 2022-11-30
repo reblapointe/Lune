@@ -361,6 +361,7 @@ else phase = PHASE_PLEINE_LUNE;
             } while (valide); // Sortir quand l'usager entre une lettre
 
             Console.WriteLine("Bye!");
+            Console.ReadKey();
         }
     }
 }
